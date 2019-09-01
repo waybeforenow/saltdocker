@@ -13,10 +13,10 @@ This image contains a running salt-master and salt-api process, which can be use
 
 # How to use this image
 
-## start a salt instance
+## Start a Salt instance
 
 ```console
-$ docker run --name salt --hostname salt -P -e SALT_SHARED_SECRET=mysecretpassword -d saltstack/salt
+$ docker run --name salt --hostname salt -p 4505-4506:4505-4506 -p 8000:8000 -e SALT_SHARED_SECRET=mysecretpassword -d saltstack/salt
 ```
 
 The default `salt` user is created but the shared secret is specified in the `/etc/salt/master.d/api.conf`.
