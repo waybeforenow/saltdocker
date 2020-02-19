@@ -11,7 +11,7 @@ import aiohttp
 import click
 import jinja2
 
-MINVER = distutils.version.LooseVersion('2018.3.0')
+MINVER = distutils.version.LooseVersion('2019.2.0')
 PATH = os.path.dirname(os.path.abspath(__file__))
 with open(f'{PATH}/Dockerfile.j2') as dockerfile:
     DOCKERTEMPLATE = jinja2.Template(dockerfile.read())
@@ -42,7 +42,7 @@ class SaltVersion(object):
             tmpfile = tempfile.mkstemp()
             with open(tmpfile[1], 'w') as dfile:
                 print(DOCKERTEMPLATE.render(salt_version=self.version), file=dfile)
-            
+
             cwd = os.getcwd()
             if cwd != PATH:
                 os.chdir(PATH)
@@ -51,7 +51,7 @@ class SaltVersion(object):
 
             if force is True:
                 args.append('--no-cache')
-            
+
             if latest is True:
                 args.extend([
                     '--tag', 'saltstack/salt:latest',

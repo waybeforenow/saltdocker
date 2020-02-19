@@ -1,5 +1,6 @@
 # Supported tags and respective `Dockerfile` links
 
+- [`3000`, `latest`](https://github.com/saltstack/saltdocker/tree/master/Dockerfile.j2)
 - [`2019.2.0`, `2019.2`, `latest`](https://github.com/saltstack/saltdocker/tree/master/Dockerfile.j2)
 - [`2018.3.4`, `2018.3`](https://github.com/saltstack/saltdocker/tree/master/Dockerfile.j2)
 
