@@ -15,10 +15,10 @@ MINVER = distutils.version.LooseVersion("2019.2.0")
 PATH = os.path.dirname(os.path.abspath(__file__))
 with open(f"{PATH}/Dockerfile.j2") as dockerfile:
     DOCKERTEMPLATE = jinja2.Template(dockerfile.read())
+SKIP_VERSIONS = ["2019.2.0rc2", "3000.0.0rc2"]
 
 
 class SaltVersion(object):
-
     loop = asyncio.get_event_loop()
     versions = []
     _date = datetime.datetime.utcnow().strftime("%Y%m%d%H%M")
@@ -32,7 +32,7 @@ class SaltVersion(object):
 
     @classmethod
     def date(self, setting=False):
-        if os.path.isfile(".lastbuild") and setting == False:
+        if os.path.isfile(".lastbuild") and setting is False:
             with open(".lastbuild") as lastbuild:
                 SaltVersion._date = json.load(lastbuild)["lastbuild"]
         return SaltVersion._date
@@ -53,9 +53,7 @@ class SaltVersion(object):
                 args.append("--no-cache")
 
             if latest is True:
-                args.extend(
-                    ["--tag", "saltstack/salt:latest",]
-                )
+                args.extend(["--tag", "saltstack/salt:latest"])
 
             args.extend(
                 [
@@ -93,7 +91,7 @@ class SaltVersion(object):
 
     @classmethod
     def _check_version(cls, version):
-        if version < MINVER or "rc" in version.version:
+        if version < MINVER or version in SKIP_VERSIONS:
             return False
         if [
             v
@@ -120,13 +118,20 @@ class SaltVersion(object):
                 if idx == 0:
                     await cls(version).build(force=True)
                 else:
-                    latest = version == versions[-1]
+                    latest = (
+                        version
+                        == list(filter(lambda x: "rc" not in str(x), versions))[-1]
+                    )
+
                     cls.versions.append(
                         cls.loop.create_task(cls(version).build(latest=latest))
                     )
         else:
             for idx, version in enumerate(versions):
-                latest = version == versions[-1]
+                latest = (
+                    version == list(filter(lambda x: "rc" not in str(x), versions))[-1]
+                )
+
                 cls.versions.append(
                     cls.loop.create_task(
                         cls(version).push(latest=latest, dryrun=dryrun)
