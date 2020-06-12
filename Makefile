@@ -1,5 +1,13 @@
+PYTHON_FILES := $(shell find . -type f -name "*.py")
+
+lint: $(PYTHON_FILES)
+	@black --check --target-version py37 $?
+
+black: $(PYTHON_FILES)
+	@black --target-version py37 $?
+
 install:
-	pip install poetry
+	pip install black poetry
 	poetry install
 
 build:

@@ -2,19 +2,20 @@ sudo: false
 language: python
 cache: pip
 services:
-- docker
+  - docker
 
 install:
-- make install
+  - make install
 
 env:
-- TMPDIR=/home/travis/build/saltstack/saltdocker
+  - TMPDIR=/home/travis/build/saltstack/saltdocker
 
 python:
-- '3.7-dev'
+  - '3.7-dev'
 
 script:
-- make build
+  - make lint
+  - make build
 
 deploy:
   provider: script
